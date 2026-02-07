@@ -1,0 +1,32 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Editor",
+    "bindings": {
+      "tab": "editor::Indent",
+      "cmd-shift-up": "editor::NewlineAbove",
+      "cmd-shift-down": "editor::NewlineBelow",
+      "cmd-up": "editor::AddSelectionAbove",
+      "cmd-down": "editor::AddSelectionBelow"
+    }
+  },
+  {
+    "context": "Editor && showing_completions",
+    "bindings": {
+      "tab": "editor::ComposeCompletion",
+      "enter": "editor::Newline"
+    }
+  },
+  {
+    "context": "(((Editor && in_snippet) && has_next_tabstop) && !showing_completions)",
+    "bindings": {
+      "tab": "editor::NextSnippetTabstop"
+    }
+  }
+]

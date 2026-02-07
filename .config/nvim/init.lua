@@ -33,7 +33,7 @@ vim.pack.add({
   "https://github.com/nvim-lualine/lualine.nvim",
   "https://github.com/windwp/nvim-autopairs",
   "https://github.com/nvim-treesitter/nvim-treesitter",
-  "https://github.com/tpop/vim-surround",
+  "https://github.com/tpope/vim-surround",
   "https://github.com/chomosuke/typst-preview.nvim",
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/mason-org/mason-lspconfig.nvim",
