@@ -1,0 +1,10 @@
+*.bak
+*.swp
+*.tmp
+*.history
+*~
+
+.DS_Store
+Thumbs.db
+
+nvim-pack-lock.json
