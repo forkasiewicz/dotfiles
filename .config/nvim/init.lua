@@ -16,10 +16,30 @@ local options = {
   smartcase     = true,
   incsearch     = true,
   hlsearch      = true,
+  fileformats   = { "unix", "dos" },
 }
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
+
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+  pattern = "*",
+  callback = function()
+    local start_line = 0
+    local end_line = vim.api.nvim_buf_line_count(0)
+    local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
+    local changed = false
+    for i, line in ipairs(lines) do
+      if line:find("\r") then
+        lines[i] = line:gsub("\r", "")
+        changed = true
+      end
+    end
+    if changed then
+      vim.api.nvim_buf_set_lines(0, start_line, end_line, false, lines)
+    end
+  end,
+})
 
 local keymap = vim.keymap.set
 local opts = { silent = true }
