@@ -6,6 +6,7 @@ title = "Terminal"
 dynamic_title = true
 decorations_theme_variant = "Dark"
 dimensions = { columns = 90, lines = 40 }
+option_as_alt = "Both"
 
 [scrolling]
 history = 100000
@@ -88,7 +89,5 @@ white   = "0xd7d7d7"
 bindings = [
   { key = "C", mods = "Control|Shift", action = "Copy" },
   { key = "V", mods = "Control|Shift", action = "Paste" },
-
-  #  { key = "Back", mods = "Control", chars = "\u0015" }
 ]
 

@@ -23,7 +23,6 @@
   "selection_highlight": true,
   "current_line_highlight": "all",
   "buffer_font_weight": 500.0,
-  "icon_theme": "JetBrains New UI Icons (Dark)",
   "git": {
     "inline_blame": {
       "enabled": false,
@@ -50,12 +49,12 @@
     "diagnostics": false,
   },
   "ui_font_size": 16,
-  "ui_font_family": "Roboto Mono",
+  "ui_font_family": "Fira Code",
   "buffer_font_size": 16,
   "theme": {
     "mode": "system",
-    "light": "One Light",
-    "dark": "Material Theme Darker",
+    "light": "Vague",
+    "dark": "Vague",
   },
   "features": {
     "edit_prediction_provider": "none",
@@ -65,12 +64,4 @@
   },
   "soft_wrap": "preferred_line_length",
   "preferred_line_length": 80,
-  "lsp": {
-    "tinymist": {
-      "settings": {
-        "exportPdf": "onSave",
-        "outputPath": "$root/$name",
-      },
-    },
-  },
 }
