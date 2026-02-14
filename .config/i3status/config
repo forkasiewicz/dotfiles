@@ -7,7 +7,7 @@ order += "cpu_usage"
 order += "memory"
 order += "disk /"
 order += "volume pcm"
-order += "tztime melbourne"
+order += "tztime canberra"
 order += "time"
 
 cpu_usage {
@@ -34,7 +34,7 @@ time {
     format = "%Y-%m-%d %H:%M:%S"
 }
 
-tztime melbourne {
+tztime canberra {
     format = "Canberra: %H:%M"
     timezone = "Australia/Canberra"
 }

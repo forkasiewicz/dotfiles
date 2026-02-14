@@ -1,6 +1,14 @@
 [linux]
-i3
-i3status
+configs = [
+    "i3",
+    "i3status"
+]
 
 [macos]
-aerospace
+configs = [
+    "aerospace"
+]
+
+# linux , macos
+[symlinks]
+"alacritty/os.toml" = "alacritty/{{OS}}.toml"

@@ -1,3 +1,5 @@
+[general]
+import = ["os.toml"]
 [env]
 TERM = "alacritty"
 
@@ -10,12 +12,6 @@ option_as_alt = "Both"
 
 [scrolling]
 history = 100000
-
-[font]
-size = 12
-
-[font.normal]
-family = "Terminus (TTF)"
 
 [selection]
 save_to_clipboard = true
