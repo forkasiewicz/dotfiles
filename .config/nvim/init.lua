@@ -3,7 +3,7 @@ vim.g.maplocalleader = ","
 
 local options = {
   termguicolors = true,
-  cursorline    = true,
+  cursorline    = false,
   completeopt   = { "menuone", "noselect" },
   expandtab     = true,
   tabstop       = 2,
@@ -17,29 +17,19 @@ local options = {
   incsearch     = true,
   hlsearch      = true,
   fileformats   = { "unix", "dos" },
+  undofile      = true,
+  number        = true,
+  signcolumn    = "yes",
+  showtabline   = 2,
+  colorcolumn   = "80",
+  winborder     = "rounded",
+  updatetime    = 250,
+  swapfile      = false
 }
+
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
-
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
-  pattern = "*",
-  callback = function()
-    local start_line = 0
-    local end_line = vim.api.nvim_buf_line_count(0)
-    local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
-    local changed = false
-    for i, line in ipairs(lines) do
-      if line:find("\r") then
-        lines[i] = line:gsub("\r", "")
-        changed = true
-      end
-    end
-    if changed then
-      vim.api.nvim_buf_set_lines(0, start_line, end_line, false, lines)
-    end
-  end,
-})
 
 local keymap = vim.keymap.set
 local opts = { silent = true }
@@ -62,7 +52,15 @@ vim.pack.add({
   "https://github.com/hrsh7th/cmp-buffer",
   "https://github.com/hrsh7th/cmp-path",
   "https://github.com/hrsh7th/cmp-nvim-lsp",
-  "https://github.com/hrsh7th/vim-vsnip",
+  "https://github.com/L3MON4D3/LuaSnip",
+  "https://github.com/saadparwaiz1/cmp_luasnip",
+  "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/stevearc/oil.nvim",
+  "https://github.com/chentoast/marks.nvim",
+})
+
+require("marks").setup({
+  builtin_marks = { "<", ">", "^" },
 })
 
 require("vague").setup({ italic = false })
@@ -76,10 +74,9 @@ require("lualine").setup({
   },
 })
 
-local npairs = require("nvim-autopairs")
-npairs.setup({ check_ts = true })
+require("nvim-autopairs").setup({ check_ts = true })
 local Rule = require("nvim-autopairs.rule")
-npairs.add_rules({
+require("nvim-autopairs").add_rules({
   Rule("$", "$", "typst"),
   Rule("*", "*", "typst"),
 })
@@ -161,18 +158,70 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-local cmp = require "cmp"
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, {
+      focusable = false,
+      close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+      source = "always",
+      prefix = " ",
+    })
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+  pattern = "*",
+  callback = function()
+    local start_line = 0
+    local end_line = vim.api.nvim_buf_line_count(0)
+    local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
+    local changed = false
+    for i, line in ipairs(lines) do
+      if line:find("\r") then
+        lines[i] = line:gsub("\r", "")
+        changed = true
+      end
+    end
+    if changed then
+      vim.api.nvim_buf_set_lines(0, start_line, end_line, false, lines)
+    end
+  end,
+})
+
+require("luasnip").setup({ enable_autosnippets = true })
+
+require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
+
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+
 cmp.setup({
   snippet = {
     expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
+      luasnip.lsp_expand(args.body)
     end,
   },
   mapping = {
     ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
     ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-    ["<Tab>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
-    ["<S-Tab>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
     ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
     ["<C-y>"] = cmp.config.disable,
     ["<C-e>"] = cmp.mapping({ i = cmp.mapping.abort(), c = cmp.mapping.close() }),
@@ -180,11 +229,12 @@ cmp.setup({
   },
   sources = cmp.config.sources({
     { name = "nvim_lsp" },
-    { name = "vsnip" },
+    { name = "luasnip" },
   }, {
     { name = "buffer" },
   })
 })
 
 cmp.setup.cmdline("/", { sources = { { name = "buffer" } } })
+
 cmp.setup.cmdline(":", { sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }) })

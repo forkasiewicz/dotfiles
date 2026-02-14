@@ -1,0 +1,40 @@
+general {
+    colors = true
+    interval = 5
+}
+
+order += "cpu_usage"
+order += "memory"
+order += "disk /"
+order += "volume pcm"
+order += "tztime melbourne"
+order += "time"
+
+cpu_usage {
+    format = "CPU: %usage"
+}
+
+memory {
+    format = "RAM: %used/%total"
+}
+
+disk "/" {
+    format = "Disk: %avail"
+}
+
+volume pcm {
+    format = "VOL: %volume"
+    format_muted = "VOL: MUTE"
+    device = "default"
+    mixer = "PCM"
+    mixer_idx = 0
+}
+
+time {
+    format = "%Y-%m-%d %H:%M:%S"
+}
+
+tztime melbourne {
+    format = "Canberra: %H:%M"
+    timezone = "Australia/Canberra"
+}

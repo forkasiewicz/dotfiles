@@ -12,14 +12,10 @@ option_as_alt = "Both"
 history = 100000
 
 [font]
-size = 14
+size = 12
 
 [font.normal]
-# family = "Roboto Mono"
-# family = "Google Sans Code"
-# family = "JetBrains Mono"
-family = "Fira Code"
-# style = "Medium"
+family = "Terminus (TTF)"
 
 [selection]
 save_to_clipboard = true
@@ -29,61 +25,29 @@ style = { shape = "Block", blinking = "Always" }
 blink_interval = 750
 blink_timeout = 0
 
-# [colors.primary]
-# background = "0x1d2021"
-# foreground = "0xd5c4a1"
-#
-# [colors.cursor]
-# text = "0x1d2021"
-# cursor = "0xd5c4a1"
-#
-# [colors.normal]
-# black = "0x1d2021"
-# red = "0xfb4934"
-# green = "0xb8bb26"
-# yellow = "0xfabd2f"
-# blue = "0x83a598"
-# magenta = "0xd3869b"
-# cyan = "0x8ec07c"
-# white = "0xd5c4a1"
-#
-# [colors.bright]
-# black = "0x665c54"
-# red = "0xfe8019"
-# green = "0x3c3836"
-# yellow = "0x504945"
-# blue = "0xbdae93"
-# magenta = "0xebdbb2"
-# cyan = "0xd65d0e"
-# white = "0xfbf1c7"
-
 [colors.primary]
-background = "0x141415"
-foreground = "0xcdcdcd"
-
-[colors.cursor]
-text = "0x141415"
-cursor = "0xcdcdcd"
+background = "#141415"
+foreground = "#cdd6cd"
 
 [colors.normal]
-black   = "0x252530"
-red     = "0xd8647e"
-green   = "0x7fa563"
-yellow  = "0xf3be7c"
-blue    = "0x6e94b2"
-magenta = "0xbb9dbd"
-cyan    = "0xaeaed1"
-white   = "0xcdcdcd"
+black   = "#252530"
+red     = "#d8647e"
+green   = "#7fa563"
+yellow  = "#f3be7c"
+blue    = "#6e94b2"
+magenta = "#bb9dbd"
+cyan    = "#aeaed1"
+white   = "#cdcdcd"
 
 [colors.bright]
-black   = "0x606079"
-red     = "0xe08398"
-green   = "0x99b782"
-yellow  = "0xf5cb96"
-blue    = "0x8ba9c1"
-magenta = "0xc9b1ca"
-cyan    = "0xbebeda"
-white   = "0xd7d7d7"
+black   = "#606079"
+red     = "#e08398"
+green   = "#99b782"
+yellow  = "#f5cb96"
+blue    = "#8ba9c1"
+magenta = "#c9b1ca"
+cyan    = "#bebeda"
+white   = "#d7d7d7"
 
 [keyboard]
 bindings = [

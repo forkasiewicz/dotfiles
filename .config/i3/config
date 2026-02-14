@@ -1,0 +1,78 @@
+set $super Mod4
+
+font pango:Terminus (TTF) 11
+
+floating_modifier $super
+
+bindsym $super+Return exec alacritty
+bindsym $super+d exec rofi -show drun
+bindsym $super+c kill
+bindsym $super+Shift+e exit
+# bindsym $super+Shift+r reload
+# bindsym $super+Shift+c restart
+bindsym $super+BackSpace exec "i3-msg restart"
+
+bindsym $super+h focus left
+bindsym $super+j focus down
+bindsym $super+k focus up
+bindsym $super+l focus right
+
+bindsym $super+Shift+h move left
+bindsym $super+Shift+j move down
+bindsym $super+Shift+k move up
+bindsym $super+Shift+l move right
+
+bindsym $super+v split vertical
+bindsym $super+f split horizontal
+bindsym $super+s layout toggle split
+bindsym $super+Shift+space floating toggle
+
+bindsym $super+Shift+s exec --no-startup-id ~/.config/picom/toggle-monochrome
+
+bindsym --whole-window $super+button4 workspace next
+bindsym --whole-window $super+button5 workspace prev
+
+set $ws1 "1:I"
+set $ws2 "2:II"
+set $ws3 "3:III"
+set $ws4 "4:IV"
+set $ws5 "5:V"
+set $ws6 "6:VI"
+set $ws7 "7:VII"
+set $ws8 "8:VIII"
+set $ws9 "9:IX"
+
+bindsym $super+1 workspace $ws1
+bindsym $super+2 workspace $ws2
+bindsym $super+3 workspace $ws3
+bindsym $super+4 workspace $ws4
+bindsym $super+5 workspace $ws5
+bindsym $super+6 workspace $ws6
+bindsym $super+7 workspace $ws7
+bindsym $super+8 workspace $ws8
+bindsym $super+9 workspace $ws9
+
+bindsym $super+Shift+1 move container to workspace $ws1; workspace $ws1
+bindsym $super+Shift+2 move container to workspace $ws2; workspace $ws2
+bindsym $super+Shift+3 move container to workspace $ws3; workspace $ws3
+bindsym $super+Shift+4 move container to workspace $ws4; workspace $ws4
+bindsym $super+Shift+5 move container to workspace $ws5; workspace $ws5
+bindsym $super+Shift+6 move container to workspace $ws6; workspace $ws6
+bindsym $super+Shift+7 move container to workspace $ws7; workspace $ws7
+bindsym $super+Shift+8 move container to workspace $ws8; workspace $ws8
+bindsym $super+Shift+9 move container to workspace $ws9; workspace $ws9
+
+gaps inner 20
+gaps outer 0
+
+bindsym Print exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
+
+exec_always --no-startup-id feh /home/c/.config/wallpapers/desktop.jpg --bg-max # --bg-fill --force-aliasing
+exec_always --no-startup-id picom -b
+exec xrandr --output DP-4 --mode 2560x1440 --rate 239.96
+exec xset r rate 250 30
+for_window [class="Zathura"] border none
+
+bar 
+    status_command i3status
+}
