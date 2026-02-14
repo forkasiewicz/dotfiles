@@ -1,86 +1,100 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+DOTFILES_DIR="$HOME/dotfiles"
+CONFIG_SRC="$DOTFILES_DIR/.config"
+CONFIG_DEST="$HOME/.config"
+CONF_FILE="$DOTFILES_DIR/config"
 
-DOTFILES="$HOME/dotfiles/.config"
-TARGET="$HOME/.config"
-TOML="$HOME/dotfiles/dotfiles.toml"
-
-mkdir -p "$TARGET"
-
-OS=""
-case "$(uname)" in
-    Linux*)  OS="linux";;
-    Darwin*) OS="macos";;
-    *)       echo "Unsupported OS: $(uname)"; exit 1;;
+OS_UNAME=$(uname -s)
+case "$OS_UNAME" in
+    Linux*)     OS="linux" ;;
+    Darwin*)    OS="macos" ;;
+    *)          echo "Error: Unknown OS: $OS_UNAME"; exit 1 ;;
 esac
 echo "Detected OS: $OS"
 
-OS_CONFIGS=()
-while IFS= read -r line; do
+EXCLUDE_LIST=$(mktemp)
+SYMLINKS_LIST=$(mktemp)
+
+if [ "$OS" == "linux" ]; then
+    IGNORE_SECTION="macos"
+else
+    IGNORE_SECTION="linux"
+fi
+
+current_section=""
+
+while IFS= read -r line || [ -n "$line" ]; do
+    line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
     [[ -z "$line" || "$line" =~ ^# ]] && continue
-    if [[ "$line" =~ ^configs\ *= ]]; then
-        arr="${line#*=}"
-        arr="${arr#[}"
-        arr="${arr%]}"
-        arr="${arr//\"/}"
-        IFS=',' read -ra items <<< "$arr"
-        for item in "${items[@]}"; do
-            item_trimmed="$(echo $item | xargs)"
-            [[ -n "$item_trimmed" ]] && OS_CONFIGS+=("$item_trimmed")
-        done
-        break
+
+    if [[ "$line" =~ ^\[(.*)\]$ ]]; then
+        current_section="${BASH_REMATCH[1]}"
+        continue
     fi
-done < <(grep -A 20 "\[$OS\]" "$TOML")
 
-echo "OS-specific configs: ${OS_CONFIGS[*]}"
+    if [ "$current_section" == "$IGNORE_SECTION" ]; then
+        echo "$line" >> "$EXCLUDE_LIST"
+    
+    elif [ "$current_section" == "symlinks" ]; then
+        echo "$line" >> "$SYMLINKS_LIST"
+    fi
 
-ALL_CONFIGS=()
-for cfg in "$DOTFILES"/*; do
-    ALL_CONFIGS+=("$(basename "$cfg")")
-done
+done < "$CONF_FILE"
 
-COMMON_CONFIGS=()
-for cfg in "${ALL_CONFIGS[@]}"; do
-    skip=0
-    for os_cfg in "${OS_CONFIGS[@]}"; do
-        [[ "$cfg" == "$os_cfg" ]] && skip=1 && break
-    done
-    [[ $skip -eq 0 ]] && COMMON_CONFIGS+=("$cfg")
-done
+echo "--- Syncing Directories ---"
 
-echo "Common configs: ${COMMON_CONFIGS[*]}"
+for src_dir in "$CONFIG_SRC"/*; do
+    [ -d "$src_dir" ] || continue
+    
+    dirname=$(basename "$src_dir")
+    
+    if grep -Fxq "$dirname" "$EXCLUDE_LIST"; then
+        echo "Skipping $dirname (Exclusive to other OS)"
+        continue
+    fi
 
-link_dir() {
-    local src="$1"
-    local dest="$2"
-    if [[ -e "$dest" || -L "$dest" ]]; then
-        echo "Removing $dest"
+    dest="$CONFIG_DEST/$dirname"
+
+    if [ -e "$dest" ] || [ -L "$dest" ]; then
         rm -rf "$dest"
     fi
-    ln -s "$src" "$dest"
-    echo "Linked $src -> $dest"
-}
 
-for cfg in "${COMMON_CONFIGS[@]}"; do
-    link_dir "$DOTFILES/$cfg" "$TARGET/$cfg"
+    echo "Linking: $dirname -> $src_dir"
+    ln -s "$src_dir" "$dest"
 done
 
-for cfg in "${OS_CONFIGS[@]}"; do
-    link_dir "$DOTFILES/$cfg" "$TARGET/$cfg"
-done
+echo "--- Syncing Custom Files ---"
 
 while IFS= read -r line; do
-    [[ -z "$line" || "$line" =~ ^# ]] && continue
-    if [[ "$line" =~ = ]]; then
-        link_path=$(echo "$line" | cut -d'=' -f1 | xargs | tr -d '"')
-        src_path=$(echo "$line" | cut -d'=' -f2 | xargs | tr -d '"')
-        src_path="${src_path//\{\{OS\}\}/$OS}"
-        full_src="$TARGET/$src_path"
-        full_dest="$TARGET/$link_path"
-        mkdir -p "$(dirname "$full_dest")"
-        link_dir "$full_src" "$full_dest"
-    fi
-done < <(grep -A 100 "^\[symlinks\]" "$TOML")
+    clean_line=$(echo "$line" | tr -d '"')
+    link_path=$(echo "$clean_line" | awk -F ' = ' '{print $1}')
+    target_pattern=$(echo "$clean_line" | awk -F ' = ' '{print $2}')
 
-echo "Dotfiles linking complete!"
+    target_path=${target_pattern//\{\{OS\}\}/$OS}
+
+    full_link="$CONFIG_DEST/$link_path"
+    full_target="$CONFIG_DEST/$target_path"
+
+    link_dir=$(dirname "$full_link")
+    
+    link_base_dir=$(dirname "$link_path")
+    target_base_dir=$(dirname "$target_path")
+
+    if [ "$link_base_dir" == "$target_base_dir" ]; then
+        final_target=$(basename "$target_path")
+    else
+        final_target="$full_target"
+    fi
+
+    echo "Symlinking file: $link_path -> $final_target"
+    
+    mkdir -p "$(dirname "$full_link")"
+    rm -f "$full_link"
+    ln -s "$final_target" "$full_link"
+
+done < "$SYMLINKS_LIST"
+
+rm "$EXCLUDE_LIST" "$SYMLINKS_LIST"
+echo "Done."

@@ -35,7 +35,7 @@ if test -n $fish_git_prompt
 end
 
 printf '%s%s%s%s'\
-  (set_color --italic red) \
+  (set_color red) \
   $git_prompt \
   $stat_code \
   (set_color normal)

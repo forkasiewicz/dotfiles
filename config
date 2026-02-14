@@ -1,0 +1,9 @@
+[linux]
+i3
+i3status
+
+[macos]
+aerospace
+
+[symlinks]
+"alacritty/os.toml" = "alacritty/{{OS}}.toml"

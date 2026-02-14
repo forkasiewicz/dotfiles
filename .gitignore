@@ -47,3 +47,6 @@ __pycache__/
 nvim-pack-lock.json
 
 tmp/
+
+# script specific
+os.*
