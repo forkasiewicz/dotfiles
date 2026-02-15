@@ -1,3 +1,23 @@
+vim.pack.add({
+  "https://github.com/vague-theme/vague.nvim",
+  "https://github.com/nvim-lualine/lualine.nvim",
+  "https://github.com/windwp/nvim-autopairs",
+  "https://github.com/nvim-treesitter/nvim-treesitter",
+  "https://github.com/tpope/vim-surround",
+  "https://github.com/chomosuke/typst-preview.nvim",
+  "https://github.com/mason-org/mason.nvim",
+  "https://github.com/hrsh7th/nvim-cmp",
+  "https://github.com/hrsh7th/cmp-cmdline",
+  "https://github.com/hrsh7th/cmp-buffer",
+  "https://github.com/hrsh7th/cmp-path",
+  "https://github.com/hrsh7th/cmp-nvim-lsp",
+  "https://github.com/L3MON4D3/LuaSnip",
+  "https://github.com/saadparwaiz1/cmp_luasnip",
+  "https://github.com/chentoast/marks.nvim",
+  "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/nvim-lua/plenary.nvim",
+})
+
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
@@ -17,14 +37,13 @@ local options = {
   incsearch     = true,
   hlsearch      = true,
   fileformats   = { "unix", "dos" },
-  undofile      = true,
   number        = true,
   signcolumn    = "yes",
   showtabline   = 2,
   colorcolumn   = "80",
   winborder     = "rounded",
   updatetime    = 250,
-  swapfile      = false
+  swapfile      = false,
 }
 
 for k, v in pairs(options) do
@@ -36,28 +55,78 @@ local opts = { silent = true }
 
 keymap("n", "<s-l>", ":bnext<cr>", opts)
 keymap("n", "<s-h>", ":bprevious<cr>", opts)
-keymap("n", "<leader>ev", "<cmd>edit $MYVIMRC<cr>")
+keymap("n", "<leader>ev", ":edit $MYVIMRC<cr>")
 
-vim.pack.add({
-  "https://github.com/vague-theme/vague.nvim",
-  "https://github.com/nvim-lualine/lualine.nvim",
-  "https://github.com/windwp/nvim-autopairs",
-  "https://github.com/nvim-treesitter/nvim-treesitter",
-  "https://github.com/tpope/vim-surround",
-  "https://github.com/chomosuke/typst-preview.nvim",
-  "https://github.com/mason-org/mason.nvim",
-  "https://github.com/mason-org/mason-lspconfig.nvim",
-  "https://github.com/hrsh7th/nvim-cmp",
-  "https://github.com/hrsh7th/cmp-cmdline",
-  "https://github.com/hrsh7th/cmp-buffer",
-  "https://github.com/hrsh7th/cmp-path",
-  "https://github.com/hrsh7th/cmp-nvim-lsp",
-  "https://github.com/L3MON4D3/LuaSnip",
-  "https://github.com/saadparwaiz1/cmp_luasnip",
-  "https://github.com/nvim-telescope/telescope.nvim",
-  "https://github.com/stevearc/oil.nvim",
-  "https://github.com/chentoast/marks.nvim",
+keymap('n', '<Leader>fg', ":Telescope git_files<cr>", opts)
+keymap('n', '<Leader>fr', ":Telescope live_grep<cr>", opts)
+keymap('n', '<Leader>ff', ":Telescope find_files<cr>", opts)
+keymap('n', '<Leader>fb', ":Telescope buffers<cr>", opts)
+keymap('n', '<Leader>fh', ":Telescope find_files hidden=true<cr>", opts)
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+local lspconfig = vim.lsp.config
+lspconfig("lua_ls", {
+  cmd = { "lua-language-server" },
+  filetypes = { "lua" },
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      runtime = { version = "LuaJIT" },
+      diagnostics = { globals = { "vim" } },
+      signatureHelp = { enabled = true },
+      workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+    },
+  },
 })
+
+lspconfig("clangd", {
+  cmd = { "clangd", "--header-insertion=never" },
+  filetypes = { "c", "cpp", "h", "hpp" },
+  capabilities = capabilities,
+})
+
+lspconfig("tinymist", {
+  cmd = { "tinymist" },
+  filetypes = { "typst" },
+  capabilities = capabilities,
+  settings = {
+    formatterMode = "typstyle",
+    typstyle = { lineWidth = 80 },
+  },
+})
+
+lspconfig("basedpyright", {
+  cmd = { "basedpyright-langserver", "--stdio" },
+  filetypes = { "python" },
+  capabilities = capabilities,
+})
+
+vim.lsp.enable({ "clangd", "lua_ls", "tinymist", "basedpyright" })
+
+require("mason").setup({})
+
+local mason_registry = require("mason-registry")
+
+local packages = {
+  "lua-language-server",
+  "clangd",
+  "tinymist",
+  "basedpyright"
+}
+
+mason_registry.refresh(function()
+  for _, pkg_name in ipairs(packages) do
+    local pkg = mason_registry.get_package(pkg_name)
+    if not pkg:is_installed() then
+      print("Installing " .. pkg_name .. "...")
+      pkg:install()
+    end
+  end
+end)
+
+require("luasnip").setup({ enable_autosnippets = true })
+require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
 
 require("marks").setup({
   builtin_marks = { "<", ">", "^" },
@@ -88,109 +157,7 @@ require("nvim-treesitter").setup({
   autotag = { enable = true },
 })
 
-local function on_attach(_, bufnr)
-  local map = function(mode, lhs, rhs)
-    vim.keymap.set(mode, lhs, rhs, { buffer = bufnr })
-  end
-
-  map("n", "gd", vim.lsp.buf.definition)
-  map("n", "gr", vim.lsp.buf.references)
-  map("n", "gi", vim.lsp.buf.implementation)
-  map("n", "K", vim.lsp.buf.hover)
-  map("n", "<leader>rn", vim.lsp.buf.rename)
-  map("n", "<leader>ca", vim.lsp.buf.code_action)
-  map("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end)
-end
-
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-require("mason").setup({})
-require("mason-lspconfig").setup({
-  ensure_installed = { "lua_ls", "clangd", "tinymist", "basedpyright" }
-})
-
-local lspconfig = vim.lsp.config
-lspconfig("lua_ls", {
-  cmd = { "lua-language-server" },
-  filetypes = { "lua" },
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    Lua = {
-      runtime = { version = "LuaJIT" },
-      diagnostics = { globals = { "vim" } },
-      signatureHelp = { enabled = true },
-      workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-    },
-  },
-})
-
-lspconfig("clangd", {
-  cmd = { "clangd", "--header-insertion=never" },
-  filetypes = { "c", "cpp", "h", "hpp" },
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
-
-lspconfig("tinymist", {
-  cmd = { "tinymist" },
-  filetypes = { "typst" },
-  on_attach = on_attach,
-  capabilities = capabilities,
-  settings = {
-    formatterMode = "typstyle",
-    typstyle = { lineWidth = 80 },
-  },
-})
-
-lspconfig("basedpyright", {
-  cmd = { "basedpyright-langserver", "--stdio" },
-  filetypes = { "python" },
-  on_attach = on_attach,
-  capabilities = capabilities,
-})
-
-vim.lsp.enable({ "clangd", "lua_ls", "tinymist", "basedpyright" })
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-  callback = function(args)
-    vim.lsp.buf.format({ bufnr = args.buf, async = false })
-  end,
-})
-
-vim.api.nvim_create_autocmd("CursorHold", {
-  callback = function()
-    vim.diagnostic.open_float(nil, {
-      focusable = false,
-      close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-      source = "always",
-      prefix = " ",
-    })
-  end,
-})
-
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
-  pattern = "*",
-  callback = function()
-    local start_line = 0
-    local end_line = vim.api.nvim_buf_line_count(0)
-    local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
-    local changed = false
-    for i, line in ipairs(lines) do
-      if line:find("\r") then
-        lines[i] = line:gsub("\r", "")
-        changed = true
-      end
-    end
-    if changed then
-      vim.api.nvim_buf_set_lines(0, start_line, end_line, false, lines)
-    end
-  end,
-})
-
-require("luasnip").setup({ enable_autosnippets = true })
-
-require("luasnip.loaders.from_lua").load({ paths = "~/.config/nvim/snippets/" })
+require('telescope').setup({})
 
 local cmp = require("cmp")
 local luasnip = require("luasnip")
@@ -238,3 +205,44 @@ cmp.setup({
 cmp.setup.cmdline("/", { sources = { { name = "buffer" } } })
 
 cmp.setup.cmdline(":", { sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }) })
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function(args)
+    local clients = vim.lsp.get_clients({ bufnr = args.buf })
+    if #clients > 0 then
+      vim.lsp.buf.format({ bufnr = args.buf, async = false })
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, {
+      focusable = false,
+      close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+      source = "always",
+      prefix = " ",
+    })
+  end,
+})
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local bufnr = args.buf
+    local map = function(mode, lhs, rhs)
+      vim.keymap.set(mode, lhs, rhs, { buffer = bufnr })
+    end
+
+    map("n", "gd", vim.lsp.buf.definition)
+    map("n", "gr", vim.lsp.buf.references)
+    map("n", "gi", vim.lsp.buf.implementation)
+    map("n", "K", vim.lsp.buf.hover)
+    map("n", "<leader>rn", vim.lsp.buf.rename)
+    map("n", "<leader>ca", vim.lsp.buf.code_action)
+    map("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end)
+  end,
+})
+
+vim.api.nvim_create_autocmd('TextYankPost', {
+  callback = function() vim.highlight.on_yank() end,
+})
