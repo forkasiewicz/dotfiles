@@ -10,6 +10,9 @@ decorations_theme_variant = "Dark"
 dimensions = { columns = 90, lines = 40 }
 option_as_alt = "Both"
 
+[font.normal]
+family = "0xProto Nerd Font Mono"
+
 [scrolling]
 history = 100000
 
