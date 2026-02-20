@@ -50,18 +50,21 @@ for k, v in pairs(options) do
   vim.opt[k] = v
 end
 
-local keymap = vim.keymap.set
-local opts = { silent = true }
+local function map(mode, lhs, rhs, opts)
+  opts = opts or {}
+  opts.silent = opts.silent ~= false
+  vim.keymap.set(mode, lhs, rhs, opts)
+end
 
-keymap("n", "<s-l>", ":bnext<cr>", opts)
-keymap("n", "<s-h>", ":bprevious<cr>", opts)
-keymap("n", "<leader>ev", ":edit $MYVIMRC<cr>")
+map("n", "<s-l>", ":bnext<cr>")
+map("n", "<s-h>", ":bprevious<cr>")
+map("n", "<leader>ev", ":edit $MYVIMRC<cr>")
 
-keymap('n', '<Leader>fg', ":Telescope git_files<cr>", opts)
-keymap('n', '<Leader>fr', ":Telescope live_grep<cr>", opts)
-keymap('n', '<Leader>ff', ":Telescope find_files<cr>", opts)
-keymap('n', '<Leader>fb', ":Telescope buffers<cr>", opts)
-keymap('n', '<Leader>fh', ":Telescope find_files hidden=true<cr>", opts)
+map('n', '<Leader>fg', ":Telescope git_files<cr>")
+map('n', '<Leader>fr', ":Telescope live_grep<cr>")
+map('n', '<Leader>ff', ":Telescope find_files<cr>")
+map('n', '<Leader>fb', ":Telescope buffers<cr>")
+map('n', '<Leader>fh', ":Telescope find_files hidden=true<cr>")
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -226,23 +229,32 @@ vim.api.nvim_create_autocmd("CursorHold", {
   end,
 })
 
-vim.api.nvim_create_autocmd('LspAttach', {
+vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local bufnr = args.buf
-    local map = function(mode, lhs, rhs)
-      vim.keymap.set(mode, lhs, rhs, { buffer = bufnr })
-    end
 
-    map("n", "gd", vim.lsp.buf.definition)
-    map("n", "gr", vim.lsp.buf.references)
-    map("n", "gi", vim.lsp.buf.implementation)
-    map("n", "K", vim.lsp.buf.hover)
-    map("n", "<leader>rn", vim.lsp.buf.rename)
-    map("n", "<leader>ca", vim.lsp.buf.code_action)
-    map("n", "<leader>f", function() vim.lsp.buf.format({ async = true }) end)
+    map("n", "gd", vim.lsp.buf.definition, { buffer = bufnr })
+    map("n", "gr", vim.lsp.buf.references, { buffer = bufnr })
+    map("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr })
+    map("n", "K", vim.lsp.buf.hover, { buffer = bufnr })
+    map("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr })
+    map("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr })
+    map("n", "<leader>f", function()
+      vim.lsp.buf.format({ async = true })
+    end, { buffer = bufnr })
   end,
 })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.highlight.on_yank() end,
+})
+
+vim.api.nvim_create_autocmd("ModeChanged", {
+  pattern = "*",
+  callback = function()
+    if require("luasnip").session.current_nodes[vim.api.nvim_get_current_buf()]
+        and not require("luasnip").session.jump_active then
+      require("luasnip").unlink_current()
+    end
+  end,
 })
