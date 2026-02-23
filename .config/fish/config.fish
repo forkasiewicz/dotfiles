@@ -12,6 +12,7 @@ alias python python3
 alias pip pip3
 alias ls "ls -G"
 alias ll "ls -lhG"
+alias li "ls -d */ | sed 's#/##'"
 
 function fish_prompt
 set -l cmd_status $status

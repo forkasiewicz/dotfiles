@@ -39,7 +39,6 @@ local options = {
   fileformats   = { "unix", "dos" },
   number        = true,
   signcolumn    = "yes",
-  showtabline   = 2,
   colorcolumn   = "80",
   winborder     = "rounded",
   updatetime    = 250,
@@ -65,6 +64,27 @@ map('n', '<Leader>fr', ":Telescope live_grep<cr>")
 map('n', '<Leader>ff', ":Telescope find_files<cr>")
 map('n', '<Leader>fb', ":Telescope buffers<cr>")
 map('n', '<Leader>fh', ":Telescope find_files hidden=true<cr>")
+
+map("n", "<C-d>", "<C-d>zz")
+map("n", "<C-u>", "<C-u>zz")
+
+map("n", "<C-h>", "<C-w>h")
+map("n", "<C-j>", "<C-w>j")
+map("n", "<C-k>", "<C-w>k")
+map("n", "<C-l>", "<C-w>l")
+
+map("t", "<C-h>", "<C-\\><C-N><C-w>h")
+map("t", "<C-j>", "<C-\\><C-N><C-w>j")
+map("t", "<C-k>", "<C-\\><C-N><C-w>k")
+map("t", "<C-l>", "<C-\\><C-N><C-w>l")
+
+map("v", "<", "<gv")
+map("v", ">", ">gv")
+
+map("n", "<C-Up>", ":resize +1<CR>")
+map("n", "<C-Down>", ":resize -1<CR>")
+map("n", "<C-Left>", ":vertical resize -1<CR>")
+map("n", "<C-Right>", ":vertical resize +1<CR>")
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -162,6 +182,7 @@ require("nvim-treesitter").setup({
 
 require('telescope').setup({})
 
+-- TODO: fix luasnip
 local cmp = require("cmp")
 local luasnip = require("luasnip")
 
