@@ -11,7 +11,10 @@ dimensions = { columns = 90, lines = 40 }
 option_as_alt = "Both"
 
 [font.normal]
-family = "0xProto Nerd Font Mono"
+family = "Mononoki"
+
+[font]
+size = 16
 
 [scrolling]
 history = 100000

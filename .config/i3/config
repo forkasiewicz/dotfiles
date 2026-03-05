@@ -1,7 +1,7 @@
 set $super Mod4
 
 # font pango:Terminus (TTF) 11
-font pango:0xProto Nerd Font Mono 12
+font pango:Mononoki 12
 
 floating_modifier $super
 
@@ -27,8 +27,6 @@ bindsym $super+v split vertical
 bindsym $super+f split horizontal
 bindsym $super+s layout toggle split
 bindsym $super+Shift+space floating toggle
-
-bindsym $super+Shift+s exec --no-startup-id ~/.config/picom/toggle-monochrome
 
 bindsym --whole-window $super+button4 workspace next
 bindsym --whole-window $super+button5 workspace prev
