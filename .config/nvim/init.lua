@@ -14,7 +14,6 @@ vim.pack.add({
   "https://github.com/L3MON4D3/LuaSnip",
   "https://github.com/saadparwaiz1/cmp_luasnip",
   "https://github.com/chentoast/marks.nvim",
-  "https://github.com/nvim-telescope/telescope.nvim",
   "https://github.com/nvim-lua/plenary.nvim",
 })
 
@@ -58,12 +57,6 @@ end
 map("n", "<s-l>", ":bnext<cr>")
 map("n", "<s-h>", ":bprevious<cr>")
 map("n", "<leader>ev", ":edit $MYVIMRC<cr>")
-
-map('n', '<Leader>fg', ":Telescope git_files<cr>")
-map('n', '<Leader>fr', ":Telescope live_grep<cr>")
-map('n', '<Leader>ff', ":Telescope find_files<cr>")
-map('n', '<Leader>fb', ":Telescope buffers<cr>")
-map('n', '<Leader>fh', ":Telescope find_files hidden=true<cr>")
 
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")
@@ -179,8 +172,6 @@ require("nvim-treesitter").setup({
   indent = { enable = true },
   autotag = { enable = true },
 })
-
-require('telescope').setup({})
 
 -- TODO: fix luasnip
 local cmp = require("cmp")
