@@ -1,3 +1,5 @@
+config-version = 2
+
 start-at-login = true
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
@@ -8,10 +10,8 @@ key-mapping.preset = 'qwerty'
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [mode.main.binding]
-# TODO: fix this, make it open a new terminal every time.
-# alt-enter = 'exec-and-forget open -a Alacritty'
+alt-enter = 'exec-and-forget alacritty msg create-window || alacritty'
 alt-c = 'close'
-alt-shift-backspace = 'reload-config'
 
 alt-s = 'layout tiles horizontal vertical'
 alt-shift-space = 'layout floating tiling'
@@ -48,7 +48,3 @@ outer.left       = 0
 outer.bottom     = 0
 outer.top        = 0
 outer.right      = 0
-
-[[on-window-detected]]
-if.app-id = 'org.pwmt.zathura'
-run = 'layout floating'
