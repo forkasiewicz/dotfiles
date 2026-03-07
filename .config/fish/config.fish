@@ -23,7 +23,7 @@ else
   set letter '>'
 end
 
-set -l fish_color_cwd white
+set -l fish_color_cwd black
 
 set -l stat_code ""
 if test $cmd_status -ne 0

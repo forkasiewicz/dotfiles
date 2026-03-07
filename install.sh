@@ -1,69 +1,83 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-DOTFILES_DIR="$HOME/dotfiles"
-CONFIG_SRC="$DOTFILES_DIR/.config"
-CONFIG_DEST="$HOME/.config"
-CONF_FILE="$DOTFILES_DIR/config"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_FILE="$REPO_DIR/config"
+SRC_CONFIG_DIR="$REPO_DIR/.config"
+DEST_CONFIG_DIR="$HOME/.config"
 
-OS_UNAME=$(uname -s)
-case "$OS_UNAME" in
-    Linux*)  OS="linux" ;;
-    Darwin*) OS="macos" ;;
-    *) echo "Error: Unknown OS: $OS_UNAME"; exit 1 ;;
+mkdir -p "$DEST_CONFIG_DIR"
+
+case "$(uname -s)" in
+    Linux) CURRENT_OS="linux" ;;
+    Darwin) CURRENT_OS="macos" ;;
+    *)
+        echo "Unsupported OS: $(uname -s)"
+        exit 1
+        ;;
 esac
 
-echo "Detected OS: $OS"
-
-EXCLUDE_LIST=$(mktemp)
-
-if [ "$OS" == "linux" ]; then
-    IGNORE_SECTION="macos"
-else
-    IGNORE_SECTION="linux"
-fi
+declare -A linux_set
+declare -A macos_set
+declare -A restricted_set
 
 current_section=""
 
-while IFS= read -r line || [ -n "$line" ]; do
-    line=$(echo "$line" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+while IFS= read -r line || [[ -n "$line" ]]; do
+    line="${line#"${line%%[![:space:]]*}"}"
+    line="${line%"${line##*[![:space:]]}"}"
 
-    [[ -z "$line" || "$line" =~ ^# ]] && continue
+    [[ -z "$line" ]] && continue
 
     if [[ "$line" =~ ^\[(.*)\]$ ]]; then
         current_section="${BASH_REMATCH[1]}"
         continue
     fi
 
-    if [ "$current_section" == "$IGNORE_SECTION" ]; then
-        echo "$line" >> "$EXCLUDE_LIST"
+    case "$current_section" in
+        linux)
+            linux_set["$line"]=1
+            restricted_set["$line"]=1
+            ;;
+        macos)
+            macos_set["$line"]=1
+            restricted_set["$line"]=1
+            ;;
+    esac
+done < "$CONFIG_FILE"
+
+for dir in "$SRC_CONFIG_DIR"/*; do
+    [[ -d "$dir" ]] || continue
+    name="$(basename "$dir")"
+
+    should_link=false
+
+    if [[ -n "${restricted_set[$name]:-}" ]]; then
+        if [[ "$CURRENT_OS" == "linux" && -n "${linux_set[$name]:-}" ]]; then
+            should_link=true
+        elif [[ "$CURRENT_OS" == "macos" && -n "${macos_set[$name]:-}" ]]; then
+            should_link=true
+        fi
+    else
+        should_link=true
     fi
 
-done < "$CONF_FILE"
+    [[ "$should_link" == true ]] || continue
 
-echo "--- Syncing Directories ---"
+    src="$dir"
+    dst="$DEST_CONFIG_DIR/$name"
 
-mkdir -p "$CONFIG_DEST"
-
-for src_dir in "$CONFIG_SRC"/*; do
-    [ -d "$src_dir" ] || continue
-
-    dirname=$(basename "$src_dir")
-
-    if grep -Fxq "$dirname" "$EXCLUDE_LIST"; then
-        echo "Skipping $dirname (Exclusive to other OS)"
-        continue
+    if [[ -L "$dst" ]]; then
+        current_target="$(readlink "$dst")"
+        if [[ "$current_target" == "$src" ]]; then
+            continue
+        else
+            rm "$dst"
+        fi
+    elif [[ -e "$dst" ]]; then
+        rm -rf "$dst"
     fi
 
-    dest="$CONFIG_DEST/$dirname"
-
-    if [ -e "$dest" ]; then
-        rm -rf "$dest"
-    fi
-
-    echo "Copying: $dirname"
-    cp -r "$src_dir" "$dest"
+    ln -s "$src" "$dst"
+    echo "linked $name"
 done
-
-rm "$EXCLUDE_LIST"
-
-echo "Done."

@@ -1,6 +1,9 @@
 [linux]
 i3
 i3status
+niri
+waybar
+fuzzel
 
 [macos]
 aerospace
