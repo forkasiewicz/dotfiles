@@ -25,18 +25,22 @@ bindsym $super+f split horizontal
 bindsym $super+s layout toggle split
 bindsym $super+Shift+space floating toggle
 
-bindsym --whole-window $super+button4 workspace next
-bindsym --whole-window $super+button5 workspace prev
+bindsym $super+t layout tabbed
+bindsym $super+Left focus left
+bindsym $super+Right focus right
 
-set $ws1 " 1 "
-set $ws2 " 2 "
-set $ws3 " 3 "
-set $ws4 " 4 "
-set $ws5 " 5 "
-set $ws6 " 6 "
-set $ws7 " 7 "
-set $ws8 " 8 "
-set $ws9 " 9 "
+bindsym --whole-window $super+button4 workspace prev
+bindsym --whole-window $super+button5 workspace next
+
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
 
 bindsym $super+1 workspace $ws1
 bindsym $super+2 workspace $ws2
@@ -64,10 +68,6 @@ gaps outer 0
 bindsym Print exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
 
 exec_always --no-startup-id feh /home/c/.config/wallpapers/lete.jpg --bg-fill
+exec --no-startup-id polybar main
 exec --no-startup-id xrandr --output DP-2 --mode 2560x1440 --rate 239.96
 exec xset r rate 250 30
-for_window [class="Zathura"] border none
-
-bar {
-    status_command i3status
-}

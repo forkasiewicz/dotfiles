@@ -1,6 +1,6 @@
 [linux]
 .config/i3/
-.config/i3status/
+.config/polybar/
 
 [macos]
 .config/aerospace/
