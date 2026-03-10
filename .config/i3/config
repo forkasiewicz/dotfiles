@@ -29,8 +29,8 @@ bindsym $super+t layout tabbed
 bindsym $super+Left focus left
 bindsym $super+Right focus right
 
-bindsym --whole-window $super+button4 workspace prev
-bindsym --whole-window $super+button5 workspace next
+bindsym --whole-window $super+button4 workspace next
+bindsym --whole-window $super+button5 workspace prev
 
 set $ws1 "1"
 set $ws2 "2"

@@ -4,9 +4,6 @@ SAVEHIST=1000
 bindkey -e
 zstyle :compinstall filename '/home/c/.zshrc'
 
-autoload -Uz compinit
-compinit
-
 setopt PROMPT_SUBST
 
 git_branch() {
@@ -30,3 +27,11 @@ compinit
 zstyle ':completion:*' menu select
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+if [[ "$(uname)" == "Darwin" ]]; then
+  if [[ -d /opt/homebrew/bin ]]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+  fi
+fi
+
+export PATH="$HOME/.local/bin:$PATH"
