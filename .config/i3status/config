@@ -1,6 +1,7 @@
 general {
     colors = true
     interval = 5
+    separator = ""
 }
 
 order += "cpu_usage"

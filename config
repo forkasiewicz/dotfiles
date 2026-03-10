@@ -1,9 +1,6 @@
 [linux]
-i3
-i3status
-niri
-waybar
-fuzzel
+.config/i3/
+.config/i3status/
 
 [macos]
-aerospace
+.config/aerospace/

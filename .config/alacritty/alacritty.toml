@@ -4,12 +4,14 @@ TERM = "alacritty"
 [window]
 title = "Terminal"
 dynamic_title = true
+dynamic_padding = false
 decorations_theme_variant = "Dark"
 dimensions = { columns = 90, lines = 40 }
 option_as_alt = "Both"
 
 [font.normal]
-family = "Mononoki"
+family = "Cascadia Code"
+# style = "Bold"
 
 [font]
 size = 16
@@ -26,42 +28,28 @@ blink_interval = 750
 blink_timeout = 0
 
 [colors.primary]
-background = "#FCFBF9"
-foreground = "#605A52"
+background = "#141415"
+foreground = "#cdd6cd"
 
 [colors.normal]
-black   = "#605A52"
-red     = "#8F5652"
-green   = "#747B4D"
-yellow  = "#886A44"
-blue    = "#556995"
-magenta = "#83577D"
-cyan    = "#477A7B"
-white   = "#FCFBF9"
+black   = "#252530"
+red     = "#d8647e"
+green   = "#7fa563"
+yellow  = "#f3be7c"
+blue    = "#6e94b2"
+magenta = "#bb9dbd"
+cyan    = "#aeaed1"
+white   = "#cdcdcd"
 
-# [colors.primary]
-# background = "#141415"
-# foreground = "#cdd6cd"
-#
-# [colors.normal]
-# black   = "#252530"
-# red     = "#d8647e"
-# green   = "#7fa563"
-# yellow  = "#f3be7c"
-# blue    = "#6e94b2"
-# magenta = "#bb9dbd"
-# cyan    = "#aeaed1"
-# white   = "#cdcdcd"
-#
-# [colors.bright]
-# black   = "#606079"
-# red     = "#e08398"
-# green   = "#99b782"
-# yellow  = "#f5cb96"
-# blue    = "#8ba9c1"
-# magenta = "#c9b1ca"
-# cyan    = "#bebeda"
-# white   = "#d7d7d7"
+[colors.bright]
+black   = "#606079"
+red     = "#e08398"
+green   = "#99b782"
+yellow  = "#f5cb96"
+blue    = "#8ba9c1"
+magenta = "#c9b1ca"
+cyan    = "#bebeda"
+white   = "#d7d7d7"
 
 [keyboard]
 bindings = [

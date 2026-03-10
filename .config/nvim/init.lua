@@ -1,7 +1,5 @@
 vim.pack.add({
-  "https://github.com/jacksonludwig/vim-earl-grey",
   "https://github.com/vague-theme/vague.nvim",
-  -- "https://github.com/nvim-lualine/lualine.nvim",
   "https://github.com/windwp/nvim-autopairs",
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/tpope/vim-surround",
@@ -149,17 +147,8 @@ require("marks").setup({
   builtin_marks = { "<", ">", "^" },
 })
 
--- require("vague").setup({ italic = false })
--- vim.cmd.colorscheme("vague")
-vim.cmd.colorscheme("vim-earl-grey")
-
--- require("lualine").setup({
---   options = {
---     icons_enabled = false,
---     component_separators = { left = "", right = "" },
---     section_separators = { left = "", right = "" },
---   },
--- })
+require("vague").setup({ italic = false })
+vim.cmd.colorscheme("vague")
 
 require("nvim-autopairs").setup({ check_ts = true })
 local Rule = require("nvim-autopairs.rule")
@@ -224,8 +213,8 @@ cmp.setup.cmdline("/", { sources = { { name = "buffer" } } })
 cmp.setup.cmdline(":", { sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }) })
 
 vim.api.nvim_set_hl(0, "StatusLine", {
-  fg = "background",
-  bg = "foreground",
+  fg = "foreground",
+  bg = "#606079",
 })
 
 vim.api.nvim_create_autocmd("BufWritePre", {

@@ -1,4 +1,0 @@
-# This file contains fish universal variable definitions.
-# VERSION: 3.0
-SETUVAR --export MANSECT:2\x3a3p\x3a1\x3a3\x3a5\x3a8
-SETUVAR __fish_initialized:4300

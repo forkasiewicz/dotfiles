@@ -1,7 +1,6 @@
 set $super Mod4
 
-# font pango:Terminus (TTF) 11
-font pango:Mononoki 12
+font pango:Cascadia Code 14
 
 floating_modifier $super
 
@@ -9,8 +8,6 @@ bindsym $super+Return exec alacritty
 bindsym $super+d exec rofi -show drun
 bindsym $super+c kill
 bindsym $super+Shift+e exit
-# bindsym $super+Shift+r reload
-# bindsym $super+Shift+c restart
 bindsym $super+BackSpace exec "i3-msg restart"
 
 bindsym $super+h focus left
@@ -66,8 +63,7 @@ gaps outer 0
 
 bindsym Print exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
 
-exec_always --no-startup-id feh /home/c/.config/wallpapers/desktop.jpg --bg-fill
-exec_always --no-startup-id picom -b
+exec_always --no-startup-id feh /home/c/.config/wallpapers/lete.jpg --bg-fill
 exec --no-startup-id xrandr --output DP-2 --mode 2560x1440 --rate 239.96
 exec xset r rate 250 30
 for_window [class="Zathura"] border none
