@@ -1,6 +1,0 @@
-[linux]
-.config/i3/
-.config/polybar/
-
-[macos]
-.config/aerospace/
