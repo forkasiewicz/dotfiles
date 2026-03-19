@@ -17,9 +17,10 @@ PROMPT='$(git_branch)%~ %# '
 
 autoload -Uz colors && colors
 alias ls='ls --color=auto'
-
 alias ll='ls -lF --color=auto'
 alias la='ls -A --color=auto'
+alias grep='grep -i'
+alias man2html='man -Hfirefox'
 
 autoload -Uz compinit
 compinit
@@ -35,3 +36,5 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 export PATH="$HOME/.local/bin:$PATH"
+
+export SUDO_EDITOR="nvim"

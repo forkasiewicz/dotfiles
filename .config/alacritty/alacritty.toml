@@ -11,7 +11,6 @@ option_as_alt = "Both"
 
 [font.normal]
 family = "Iosevka"
-# style = "Bold"
 
 [font]
 size = 16
