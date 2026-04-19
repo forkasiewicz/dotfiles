@@ -14,6 +14,7 @@ vim.pack.add({
   "https://github.com/saadparwaiz1/cmp_luasnip",
   "https://github.com/chentoast/marks.nvim",
   "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/EdenEast/nightfox.nvim",
 })
 
 vim.g.mapleader = ","
@@ -38,7 +39,7 @@ local options = {
   number        = true,
   signcolumn    = "yes",
   colorcolumn   = "80",
-  winborder     = "rounded",
+  -- winborder     = "rounded",
   updatetime    = 250,
   swapfile      = false,
 }
@@ -111,13 +112,30 @@ lspconfig("tinymist", {
   },
 })
 
-lspconfig("basedpyright", {
+vim.lsp.config("basedpyright", {
   cmd = { "basedpyright-langserver", "--stdio" },
   filetypes = { "python" },
   capabilities = capabilities,
 })
 
-vim.lsp.enable({ "clangd", "lua_ls", "tinymist", "basedpyright" })
+lspconfig("svelte", {
+  cmd = { "svelteserver", "--stdio" },
+  filetypes = { "svelte" },
+  capabilities = capabilities,
+  root_dir = function(bufnr)
+    return vim.fs.dirname(
+      vim.fs.find({ "package.json", ".git" }, { upward = true, path = vim.api.nvim_buf_get_name(bufnr) })[1]
+    )
+  end,
+})
+
+lspconfig("ts_ls", {
+  cmd = { "typescript-language-server", "--stdio" },
+  filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+  capabilities = capabilities,
+})
+
+vim.lsp.enable({ "clangd", "lua_ls", "tinymist", "basedpyright", "svelte", "ts_ls" })
 
 require("mason").setup({})
 
@@ -127,7 +145,9 @@ local packages = {
   "lua-language-server",
   "clangd",
   "tinymist",
-  "basedpyright"
+  "basedpyright",
+  "svelte-language-server",
+  "typescript-language-server"
 }
 
 mason_registry.refresh(function()
@@ -147,8 +167,11 @@ require("marks").setup({
   builtin_marks = { "<", ">", "^" },
 })
 
-require("vague").setup({ italic = false })
-vim.cmd.colorscheme("vague")
+-- require("vague").setup({ italic = false })
+-- vim.cmd.colorscheme("vague")
+-- require('nightfox').setup()
+-- vim.cmd.colorscheme("terafox")
+vim.cmd.colorscheme("codeberg")
 
 require("nvim-autopairs").setup({ check_ts = true })
 local Rule = require("nvim-autopairs.rule")
@@ -212,10 +235,10 @@ cmp.setup.cmdline("/", { sources = { { name = "buffer" } } })
 
 cmp.setup.cmdline(":", { sources = cmp.config.sources({ { name = "path" } }, { { name = "cmdline" } }) })
 
-vim.api.nvim_set_hl(0, "StatusLine", {
-  fg = "foreground",
-  bg = "#606079",
-})
+-- vim.api.nvim_set_hl(0, "StatusLine", {
+--   fg = "foreground",
+--   bg = "#606079",
+-- })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
   callback = function(args)

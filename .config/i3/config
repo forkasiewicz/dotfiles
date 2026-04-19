@@ -21,12 +21,13 @@ bindsym $super+Shift+j move down
 bindsym $super+Shift+k move up
 bindsym $super+Shift+l move right
 
+bindsym $super+w layout stacking
+bindsym $super+t layout tabbed
+bindsym $super+s layout toggle split
 bindsym $super+v split vertical
 bindsym $super+f split horizontal
-bindsym $super+s layout toggle split
 bindsym $super+Shift+space floating toggle
 
-bindsym $super+t layout tabbed
 bindsym $super+Left focus left
 bindsym $super+Right focus right
 
@@ -65,17 +66,12 @@ bindsym $super+Shift+9 move container to workspace $ws9; workspace $ws9
 
 bindsym Print exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
 
-exec_always --no-startup-id feh /home/c/.config/wallpapers/lete.jpg --bg-fill
+exec_always --no-startup-id feh /home/c/.config/wallpapers/artemis.jpg --bg-fill
 exec --no-startup-id polybar main
 exec --no-startup-id xrandr --output DP-2 --mode 2560x1440 --rate 239.96
 exec --no-startup-id alttab -d 1
-exec --no-startup-id xset r rate 250 30
 
-for_window [class="Pcmanfm"] floating enable
-for_window [class="mpv"] floating enable
-for_window [class="qimgv"] floating enable
-for_window [class="FileRoller"] floating enable
-for_window [class="pavucontrol"] floating enable
+exec --no-startup-id xset r rate 250 30
 
 default_border pixel
 default_floating_border normal
@@ -88,3 +84,9 @@ client.placeholder      #333738 #1c1c24 #cdcdcd #aaaaaa #1c1c24
 
 for_window [class="^.*"] border pixel 3
 default_floating_border none
+
+for_window [class="Pcmanfm"] floating enable
+for_window [class="mpv"] floating enable
+for_window [class="qimgv"] floating enable
+for_window [class="FileRoller"] floating enable
+for_window [class="pavucontrol"] floating enable
