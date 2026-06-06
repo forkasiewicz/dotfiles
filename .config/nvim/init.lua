@@ -15,6 +15,7 @@ vim.pack.add({
   "https://github.com/chentoast/marks.nvim",
   "https://github.com/nvim-lua/plenary.nvim",
   "https://github.com/EdenEast/nightfox.nvim",
+  "https://github.com/morhetz/gruvbox",
 })
 
 vim.g.mapleader = ","
@@ -171,7 +172,10 @@ require("marks").setup({
 -- vim.cmd.colorscheme("vague")
 -- require('nightfox').setup()
 -- vim.cmd.colorscheme("terafox")
-vim.cmd.colorscheme("codeberg")
+
+vim.o.background = "dark"
+vim.g.gruvbox_contrast_dark = "hard"
+vim.cmd.colorscheme("gruvbox")
 
 require("nvim-autopairs").setup({ check_ts = true })
 local Rule = require("nvim-autopairs.rule")

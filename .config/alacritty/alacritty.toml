@@ -7,10 +7,11 @@ dynamic_title = true
 dynamic_padding = false
 decorations_theme_variant = "Dark"
 dimensions = { columns = 90, lines = 40 }
-option_as_alt = "Both"
+option_as_alt = "OnlyLeft"
 
 [font.normal]
-family = "Iosevka"
+family = "Roboto Mono"
+style = "Medium"
 
 [font]
 size = 16
@@ -26,29 +27,36 @@ style = { shape = "Block", blinking = "Always" }
 blink_interval = 750
 blink_timeout = 0
 
+[colors]
+draw_bold_text_with_bright_colors= false
+
 [colors.primary]
-background = "#141415"
-foreground = "#cdd6cd"
+background = '#1d2021'
+foreground = '#d5c4a1'
 
 [colors.normal]
-black   = "#252530"
-red     = "#d8647e"
-green   = "#7fa563"
-yellow  = "#f3be7c"
-blue    = "#6e94b2"
-magenta = "#bb9dbd"
-cyan    = "#aeaed1"
-white   = "#cdcdcd"
+black   = '#1d2021'
+red     = '#fb4934'
+green   = '#b8bb26'
+yellow  = '#fabd2f'
+blue    = '#83a598'
+magenta = '#d3869b'
+cyan    = '#8ec07c'
+white   = '#d5c4a1'
 
 [colors.bright]
-black   = "#606079"
-red     = "#e08398"
-green   = "#99b782"
-yellow  = "#f5cb96"
-blue    = "#8ba9c1"
-magenta = "#c9b1ca"
-cyan    = "#bebeda"
-white   = "#d7d7d7"
+black   = '#665c54'
+red     = '#fe8019'
+green   = '#3c3836'
+yellow  = '#504945'
+blue    = '#bdae93'
+magenta = '#ebdbb2'
+cyan    = '#d65d0e'
+white   = '#fbf1c7'
+
+[colors.cursor]
+text='#1d2021'
+cursor = '#d5c4a1'
 
 [keyboard]
 bindings = [
