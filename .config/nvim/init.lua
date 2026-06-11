@@ -6,6 +6,7 @@ vim.pack.add({
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/morhetz/gruvbox",
   "https://github.com/nvim-lualine/lualine.nvim",
+  "https://github.com/ibhagwan/fzf-lua",
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
 })
 
@@ -53,6 +54,10 @@ map("n", "<C-Up>", ":resize +1<CR>")
 map("n", "<C-Down>", ":resize -1<CR>")
 map("n", "<C-Left>", ":vertical resize -1<CR>")
 map("n", "<C-Right>", ":vertical resize +1<CR>")
+
+map("n", "<leader>ff", "<cmd>lua require('fzf-lua').files()<CR>", { silent = true })
+map("n", "<leader>fg", "<cmd>lua require('fzf-lua').live_grep()<CR>", { silent = true })
+map("n", "<leader>fb", "<cmd>lua require('fzf-lua').buffers()<CR>", { silent = true })
 
 require('blink.cmp').setup({
   keymap = {
@@ -143,6 +148,10 @@ require("lualine").setup({
   },
 })
 
+require("fzf-lua").setup({
+  winopts = { preview = { default = "bat" } }
+})
+
 require("nvim-surround").setup({})
 require("nvim-autopairs").setup({ check_ts = true })
 require("nvim-autopairs").add_rules({
@@ -173,12 +182,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
   group = group,
   callback = function(args)
     local opts = { buffer = args.buf, silent = true }
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+    map("n", "gd", vim.lsp.buf.definition, opts)
+    map("n", "gr", vim.lsp.buf.references, opts)
+    map("n", "gi", vim.lsp.buf.implementation, opts)
+    map("n", "K", vim.lsp.buf.hover, opts)
+    map("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    map("n", "<leader>ca", vim.lsp.buf.code_action, opts)
   end,
 })
 
