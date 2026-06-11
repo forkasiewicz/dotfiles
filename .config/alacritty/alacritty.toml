@@ -6,15 +6,15 @@ title = "Terminal"
 dynamic_title = true
 dynamic_padding = false
 decorations_theme_variant = "Dark"
-dimensions = { columns = 90, lines = 40 }
+dimensions = { columns = 174, lines = 50 }
 option_as_alt = "OnlyLeft"
 
 [font.normal]
-family = "Roboto Mono"
+family = "RobotoMono Nerd Font"
 style = "Medium"
 
 [font]
-size = 16
+size = 15
 
 [scrolling]
 history = 100000
