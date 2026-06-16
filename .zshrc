@@ -28,6 +28,7 @@ compinit
 zstyle ':completion:*' menu select
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*:*:nvim:*' file-patterns '*(^*) *.*(*)'
 
 if [[ "$(uname)" == "Darwin" ]]; then
   if [[ -d /opt/homebrew/bin ]]; then

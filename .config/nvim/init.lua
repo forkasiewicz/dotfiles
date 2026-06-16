@@ -43,6 +43,8 @@ map("n", "<leader>ev", ":edit $MYVIMRC<cr>")
 map("n", "<C-d>", "<C-d>zz")
 map("n", "<C-u>", "<C-u>zz")
 
+map("x", "p", '"_dP')
+
 for _, ch in ipairs({ "h", "j", "k", "l" }) do
   map("n", "<C-" .. ch .. ">", "<C-w>" .. ch)
   map("t", "<C-" .. ch .. ">", "<C-\\><C-N><C-w>" .. ch)
@@ -102,19 +104,23 @@ local servers = {
   },
   clangd = {
     cmd = { "clangd", "--header-insertion=never" },
-    filetypes = { "c", "cpp", "h", "hpp" }
+    filetypes = { "c", "cpp" }
   },
   tinymist = {
+    cmd = { "tinymist" },
     filetypes = { "typst" },
     settings = { formatterMode = "typstyle", typstyle = { lineWidth = 80 } }
   },
   basedpyright = {
+    cmd = { "basedpyright-langserver", "--stdio" },
     filetypes = { "python" }
   },
   svelte = {
+    cmd = { "svelteserver", "--stdio" },
     filetypes = { "svelte" }
   },
   ts_ls = {
+    cmd = { "typescript-language-server", "--stdio" },
     filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" }
   },
 }
@@ -137,10 +143,15 @@ vim.cmd.colorscheme("gruvbox")
 
 require("lualine").setup({
   icons_enabled = false,
-  options = { section_separators = '', component_separators = '' },
+  options = {
+    section_separators = "",
+    component_separators = "",
+    theme = "gruvbox-material",
+    icons_enabled = false
+  },
   sections = {
     lualine_a = { 'mode' },
-    lualine_b = { 'diff', 'diagnostics' },
+    lualine_b = { 'diagnostics' },
     lualine_c = { 'filename' },
     lualine_x = { 'encoding', 'filetype' },
     lualine_y = { 'progress' },
@@ -148,9 +159,7 @@ require("lualine").setup({
   },
 })
 
-require("fzf-lua").setup({
-  winopts = { preview = { default = "bat" } }
-})
+require("fzf-lua").setup({ "max-perf" })
 
 require("nvim-surround").setup({})
 require("nvim-autopairs").setup({ check_ts = true })
@@ -159,6 +168,7 @@ require("nvim-autopairs").add_rules({
   require("nvim-autopairs.rule")("*", "*", "typst"),
 })
 
+vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/site")
 require("nvim-treesitter").setup({
   ensure_installed = { "c", "lua", "typst", "python" },
   highlight = { enable = true },
