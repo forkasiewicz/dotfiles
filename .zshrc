@@ -1,29 +1,30 @@
+autoload -Uz colors && colors
+autoload -Uz compinit
+compinit
+
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
+
 bindkey -e
-zstyle :compinstall filename '/home/c/.zshrc'
 
 setopt PROMPT_SUBST
+setopt AUTO_CD
 
 git_branch() {
   if git rev-parse --is-inside-work-tree &>/dev/null; then
+    local branch
     branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
-    echo "%F{red}($branch)%f "
+    echo " %F{red}($branch)%f"
   fi
 }
 
-PROMPT='$(git_branch)%~ %# '
+PROMPT='%F{cyan}%n@%m%f %~$(git_branch) %# '
 
-autoload -Uz colors && colors
 alias ls='ls --color=auto'
 alias ll='ls -lF --color=auto'
-alias la='ls -A --color=auto'
 alias grep='grep -i'
 alias man2html='man -Hfirefox'
-
-autoload -Uz compinit
-compinit
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' verbose yes

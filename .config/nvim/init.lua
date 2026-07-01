@@ -4,10 +4,13 @@ vim.pack.add({
   "https://github.com/kylechui/nvim-surround",
   "https://github.com/chomosuke/typst-preview.nvim",
   "https://github.com/mason-org/mason.nvim",
-  "https://github.com/morhetz/gruvbox",
-  "https://github.com/nvim-lualine/lualine.nvim",
   "https://github.com/ibhagwan/fzf-lua",
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
+  -- themes
+  -- "https://github.com/morhetz/gruvbox",
+  -- "https://github.com/oskarnurm/koda.nvim",
+  -- "https://github.com/folke/tokyonight.nvim",
+  "https://github.com/hallison/vim-darkdevel",
 })
 
 vim.g.mapleader      = ","
@@ -102,27 +105,54 @@ local servers = {
     filetypes = { "lua" },
     settings = { Lua = { runtime = { version = "LuaJIT" }, diagnostics = { globals = { "vim" } } } }
   },
+
   clangd = {
-    cmd = { "clangd", "--header-insertion=never" },
-    filetypes = { "c", "cpp" }
+    cmd = {
+      "clangd",
+      "--header-insertion=never",
+      "--query-driver=/usr/bin/clang,/usr/bin/gcc",
+    },
+    filetypes = { "c", "cpp" },
   },
+
   tinymist = {
     cmd = { "tinymist" },
     filetypes = { "typst" },
     settings = { formatterMode = "typstyle", typstyle = { lineWidth = 80 } }
   },
+
   basedpyright = {
     cmd = { "basedpyright-langserver", "--stdio" },
     filetypes = { "python" }
   },
+
   svelte = {
     cmd = { "svelteserver", "--stdio" },
     filetypes = { "svelte" }
   },
+
   ts_ls = {
     cmd = { "typescript-language-server", "--stdio" },
     filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" }
   },
+
+  rust_analyzer = {
+    cmd = { "rust-analyzer" },
+    filetypes = { "rust" },
+    settings = {
+      ["rust-analyzer"] = {
+        cargo = {
+          allFeatures = true,
+        },
+
+        checkOnSave = true,
+
+        diagnostics = {
+          disabled = { "unlinked-file" },
+        },
+      },
+    },
+  }
 }
 
 mason_registry.refresh(function()
@@ -139,25 +169,10 @@ end)
 
 vim.o.background = "dark"
 vim.g.gruvbox_contrast_dark = "hard"
-vim.cmd.colorscheme("gruvbox")
-
-require("lualine").setup({
-  icons_enabled = false,
-  options = {
-    section_separators = "",
-    component_separators = "",
-    theme = "gruvbox-material",
-    icons_enabled = false
-  },
-  sections = {
-    lualine_a = { 'mode' },
-    lualine_b = { 'diagnostics' },
-    lualine_c = { 'filename' },
-    lualine_x = { 'encoding', 'filetype' },
-    lualine_y = { 'progress' },
-    lualine_z = { 'location' }
-  },
-})
+-- vim.cmd.colorscheme("gruvbox")
+-- vim.cmd.colorscheme("koda-moss")
+-- vim.cmd.colorscheme("tokyonight-night")
+vim.cmd.colorscheme("darkdevel")
 
 require("fzf-lua").setup({ "max-perf" })
 
