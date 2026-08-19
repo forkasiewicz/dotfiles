@@ -227,5 +227,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = group,
-  callback = function() vim.hl.hl_op() end,
+  callback = function()
+    vim.hl.on_yank()
+  end,
 })
