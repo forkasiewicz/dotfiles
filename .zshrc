@@ -19,12 +19,14 @@ git_branch() {
   fi
 }
 
-PROMPT='%F{cyan}%n@%m%f %~$(git_branch) %# '
+# PROMPT='%F{cyan}%n@%m%f %~$(git_branch) %# '
+PROMPT='%B%F{green}%n@%m%f%b:%B%F{blue}%~%f%b%(!.#.$) '
 
 alias ls='ls --color=auto'
 alias ll='ls -lF --color=auto'
 alias grep='grep -i'
 alias man2html='man -Hfirefox'
+alias clear='printf "\033[2J\033[3J\033[H"'
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' verbose yes

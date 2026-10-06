@@ -6,11 +6,14 @@ vim.pack.add({
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/ibhagwan/fzf-lua",
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
+ "https://github.com/goolord/alpha-nvim",
   -- themes
   -- "https://github.com/morhetz/gruvbox",
   -- "https://github.com/oskarnurm/koda.nvim",
   -- "https://github.com/folke/tokyonight.nvim",
-  "https://github.com/hallison/vim-darkdevel",
+  -- "https://github.com/hallison/vim-darkdevel",
+  -- "https://github.com/Mofiqul/vscode.nvim"
+  "https://github.com/blazkowolf/gruber-darker.nvim"
 })
 
 vim.g.mapleader      = ","
@@ -172,7 +175,9 @@ vim.g.gruvbox_contrast_dark = "hard"
 -- vim.cmd.colorscheme("gruvbox")
 -- vim.cmd.colorscheme("koda-moss")
 -- vim.cmd.colorscheme("tokyonight-night")
-vim.cmd.colorscheme("darkdevel")
+-- vim.cmd.colorscheme("darkdevel")
+-- vim.cmd.colorscheme("vscode")
+vim.cmd.colorscheme("gruber-darker")
 
 require("fzf-lua").setup({ "max-perf" })
 
