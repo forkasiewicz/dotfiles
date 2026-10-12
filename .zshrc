@@ -1,15 +1,22 @@
-autoload -Uz colors && colors
-autoload -Uz compinit
-compinit
+OS="$(uname)"
 
-HISTFILE=~/.histfile
-HISTSIZE=1000
-SAVEHIST=1000
+export PATH="$HOME/.local/bin:$PATH"
+export SUDO_EDITOR="nvim"
+
+alias man2html='man -Hfirefox'
+alias clear='printf "\033[2J\033[3J\033[H"'
+
+setopt SHARE_HISTORY
+setopt PROMPT_SUBST
+setopt AUTO_CD
 
 bindkey -e
 
-setopt PROMPT_SUBST
-setopt AUTO_CD
+autoload -Uz colors && colors
+
+HISTFILE="$HOME/.histfile"
+HISTSIZE=10000
+SAVEHIST=10000
 
 git_branch() {
   if git rev-parse --is-inside-work-tree &>/dev/null; then
@@ -19,26 +26,24 @@ git_branch() {
   fi
 }
 
-# PROMPT='%F{cyan}%n@%m%f %~$(git_branch) %# '
 PROMPT='%B%F{green}%n@%m%f%b:%B%F{blue}%~%f%b%(!.#.$) '
-
-alias ls='ls --color=auto'
-alias ll='ls -lF --color=auto'
-alias grep='grep -i'
-alias man2html='man -Hfirefox'
-alias clear='printf "\033[2J\033[3J\033[H"'
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*:*:nvim:*' file-patterns '*(^*) *.*(*)'
 
-if [[ "$(uname)" == "Darwin" ]]; then
-  if [[ -d /opt/homebrew/bin ]]; then
-    export PATH="/opt/homebrew/bin:$PATH"
-  fi
+autoload -Uz compinit
+compinit
+
+if [[ "$OS" == "Darwin" ]]; then
+  # macos
+  [[ -d /opt/homebrew/bin ]] && export PATH="/opt/homebrew/bin:$PATH"
+  alias ls='ls -G'
+  alias ll='ls -lFG'
+elif [[ "$OS" == "Linux" ]]; then
+  # linux
+  alias open='xdg-open'
+  alias ls='ls --color=auto'
+  alias ll='ls -lF --color=auto'
 fi
-
-export PATH="$HOME/.local/bin:$PATH"
-
-export SUDO_EDITOR="nvim"
