@@ -36,7 +36,7 @@ link() {
     log "linked $dest -> $src"
 }
 
-# .zshrc → ~/
+# ~/.zshrc
 if [[ -f "$DOTFILES_DIR/.zshrc" ]]; then
     link "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
 fi
@@ -56,7 +56,6 @@ if [[ -d "$DOTFILES_DIR/.config" ]]; then
     done
 fi
 
-# root-level dotfiles
 for item in "$DOTFILES_DIR"/.[!.]* "$DOTFILES_DIR"/*; do
     [[ -e "$item" ]] || continue
 
